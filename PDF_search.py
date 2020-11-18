@@ -30,6 +30,12 @@ The output I want is the page number and maybe a print-out of the section of the
 # running on my laptop. No idea why though.
 
 
+# As my python script keepy changing the default directory in which it looks 
+# for my pdfs, I manually set the working directory to the directory in which
+# this script file is saved:
+import os
+cwd = os.getcwd()
+os.chdir(cwd)
 
 
 # <<<<<----------     Convert PDF to Text     ---------->>>>>
@@ -84,25 +90,48 @@ print(result1) # --> Jessy, Jakob, Johannes
 
 # Search for the next key only within the subset of list items that already
 # had the first key:
-key2 = "Jessy"  # --> filter out Jakob and Johannes-pages
+key2 = "o"  # --> filter out Jessy
 result2 = list(filter(lambda x: key2 in x, result1))
-print(result2)  # --> Jessy
+print(result2)  # --> Jakob & Johannes
 
 
 # Get page-number in original list for my result:
     # remember that pages start counting at 1 and list 
     # indices start counting at 0. Thus, the page number
     # for a list item is its index+1
-print("My result page number is: ", clean_text.index(result2[0]) + 1)
+#print("My result page number is: ", clean_text.index(result2[0]) + 1)
+    # This only works for a single result. If I had multiple pages as results,
+    # this would fail.
+    # Also, if I had no results, this would fail.
 
-# This only works for a single result. If I had multiple pages as results,
-# this would fail.
-# Also, if I had no results, this would fail.
+
+# <<<<<----------     Get Page Numbers for Search-Results     ---------->>>>>
+
+# I want to get the page numbers for ALL pages that match my search query:
+
+# Define a function that takes two arguments: a list and a list item.
+# The function then returns the index number of that list item.
+def ind(L, i):
+    v = L.index(i)
+    #print(v)
+    return v
 
 
-# Get index number for that list item:
-#index = clean_text.index(result)
-#print(index)
+# This for-Loop matches up the items in the sublist with the larger list.
+# clean_text is the whole list and result2 is a subset of that list.
+# Each item contained in the sublist is also contained in the larger list.
+# This for-loop gives me the index-numbers for the larger list. These
+# index numbers then correspond to the page numbers in the PDF.
+# Since list indices start at 0 and PRF-ages start at 1, I need to add 1 to
+# the index:
+for i in result2:
+    x = ind(result2, i)         # get index number for item i in sublist
+    y = clean_text.index(result2[x])  # get the corresponding index number for the larger list
+    y += 1                      # add one to the index number
+    print(y)                    # print the result    
+
+# >>> eturns 3 and 6 --> perfect!!
+
 
 
 
